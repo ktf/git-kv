@@ -37,5 +37,5 @@ else
   HASH=`git hash-object -w -- $FILE`
 fi
 for KEY in $KEYS; do
-  git update-index --add --cacheinfo 100644,$HASH,$KEY
+  git update-index --add --cacheinfo 100644 $HASH $KEY
 done

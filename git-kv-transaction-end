@@ -2,13 +2,13 @@
 # Initialises the git store so that it can be populated with emails
 
 while [ ! $# == 0 ]; do
-  case $0 in
+  case $1 in
   -d)
-      GIT_DIR=$1 ;
+      GIT_DIR=$2 ;
       shift; shift;
   ;;
   -m)
-      MESSAGE=$1 ;
+      MESSAGE=$2 ;
       shift; shift;
   ;;
   *) echo Unknown option $0 ; exit 1 ;;
