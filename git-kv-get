@@ -1,0 +1,30 @@
+#!/bin/bash -ex
+# Initialises the git store so that it can be populated with emails
+
+usage() {
+  cat <<\EOF
+git-kv-get -d <store-path> <key>
+EOF
+exit 1
+}
+
+while [ ! $# == 0 ]; do
+  case $1 in
+  -d)
+      GIT_DIR=$1 ;
+      shift; shift;
+  ;;
+  -h) usage ;;
+  *)
+    if [ ! X$KEY = "X" ]; then
+      echo "Too many keys specified"
+      usage
+    fi
+    KEY="$1"
+    shift
+  ;;
+  esac
+done
+
+export GIT_DIR=${GIT_DIR:-~/.git-kv}
+git show HEAD:$KEY

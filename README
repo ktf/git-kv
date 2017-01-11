@@ -1,0 +1,7 @@
+# A simple KV storage using git as a backend
+
+This is a simple KV storage built using git plumbing commands.
+
+# To install
+
+Simply clone it in your path

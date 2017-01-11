@@ -1,0 +1,27 @@
+#!/bin/bash -ex
+# Initialises the git store so that it can be populated with emails
+
+while [ ! $# == 0 ]; do
+  case $0 in
+  -d)
+      GIT_DIR=$1 ;
+      shift; shift;
+  ;;
+  -m)
+      MESSAGE=$1 ;
+      shift; shift;
+  ;;
+  *) echo Unknown option $0 ; exit 1 ;;
+  esac
+done
+
+export GIT_DIR=${GIT_DIR:-~/.git-kv}
+
+HEAD_HASH=`git rev-parse HEAD 2>/dev/null || echo`
+if [ $HEAD_HASH = HEAD ]; then
+  unset HEAD_HASH
+fi
+TREE_HASH=`git write-tree`
+COMMIT_HASH=`echo "${MESSAGE:-Transaction committed}" | git commit-tree --no-gpg-sign ${HEAD_HASH:+-p $HEAD_HASH} $TREE_HASH`
+git update-ref HEAD $COMMIT_HASH
+git gc

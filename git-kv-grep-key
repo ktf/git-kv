@@ -1,0 +1,40 @@
+#!/bin/bash -ex
+# Initialises the git store so that it can be populated with emails
+
+usage() {
+  cat <<\EOF
+git-kv-grep-keys -d <store-path> <pattern>
+EOF
+exit 1
+}
+
+while [ ! $# == 0 ]; do
+  case $1 in
+  -d)
+      if [ $# = 1 ]; then
+        echo "Not enough arguments" ; usage
+      fi
+      GIT_DIR=$2 ;
+      shift; shift
+  ;;
+  -p)
+      if [ $# = 1 ]; then
+        echo "Not enough arguments" ; usage
+      fi
+      PREFIX=$2 ;
+      shift; shift
+  ;;
+  -h) usage ;;
+  *)
+    if [ ! X$PATTERN = "X" ]; then
+      echo "Bad pattern"
+      usage
+    fi
+    PATTERN="$1"
+    shift
+  ;;
+  esac
+done
+
+export GIT_DIR=${GIT_DIR:-~/.git-kv}
+git ls-tree --full-tree -r HEAD ${PREFIX} | grep -e "${PATTERN:-.*}"
