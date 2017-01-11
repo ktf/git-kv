@@ -11,7 +11,11 @@ exit 1
 while [ ! $# == 0 ]; do
   case $1 in
   -d)
-      GIT_DIR=$1 ;
+      GIT_DIR=$2 ;
+      shift; shift;
+  ;;
+  -f)
+      FILE=$2 ;
       shift; shift;
   ;;
   -h) usage ;;
@@ -27,7 +31,11 @@ if [ "X$KEYS" = X ]; then
 fi
 
 export GIT_DIR=${GIT_DIR:-~/.git-kv}
-HASH=`git hash-object -w --stdin`
+if [ X$FILE = X ]; then
+  HASH=`git hash-object -w --stdin`
+else
+  HASH=`git hash-object -w -- $FILE`
+fi
 for KEY in $KEYS; do
   git update-index --add --cacheinfo 100644,$HASH,$KEY
 done
